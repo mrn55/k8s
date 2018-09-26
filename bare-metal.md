@@ -51,8 +51,16 @@ kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admi
 kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
 ```
 
-You can take a look at your node and pods with:
+Once again you can take a look at your cluster:
 ```
-kubectl get node
-kubectl get pods --all-namespaces
+kubectl get all --all-namespaces
 ```
+
+By now we have:
+
+[x] - Kubernetes installed
+[x] - Pod netwoking
+[x] - A node or two
+[x] - Helm/Tiller installed & configured
+[ ] - Storage class for automatic persistent storage (bit more difficult on bare-metal)
+[ ] - Ingress (same as storage class, cloud makes these easy)
