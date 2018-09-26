@@ -58,9 +58,9 @@ kubectl get all --all-namespaces
 
 By now we have:
 
-[x] - Kubernetes installed
-[x] - Pod netwoking
-[x] - A node or two
-[x] - Helm/Tiller installed & configured
-[ ] - Storage class for automatic persistent storage (bit more difficult on bare-metal)
-[ ] - Ingress (same as storage class, cloud makes these easy)
+- [x] Kubernetes installed
+- [x] Pod netwoking
+- [x] A node or two
+- [x] Helm/Tiller installed & configured
+- [ ] Storage class for automatic persistent storage (bit more difficult on bare-metal)
+- [ ] Ingress (same as storage class, cloud makes these easy)
