@@ -27,10 +27,28 @@ Next start the pod networking (I am using flannel here):
 sysctl net.bridge.bridge-nf-call-iptables=1
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
 ```
+Can look at your cluster:
+```
+kubectl get all --all-namespaces
+```
 
-Join a node then when you are ready to initiaize Helm you can run:
+Install Helm:
+```
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
+chmod 700 get_helm.sh
+./get_helm.sh
+```
+
+Once Helm installed:
 ```
 helm init
+```
+
+Setup Tiller's permissions:
+```
+kubectl create serviceaccount --namespace kube-system tiller
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
 ```
 
 You can take a look at your node and pods with:
