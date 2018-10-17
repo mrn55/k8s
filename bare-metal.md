@@ -1,9 +1,15 @@
 This site is a good resource for bringing up k8's after kubeadm is [installed](https://kubernetes.io/docs/setup/independent/install-kubeadm/).
 
-If there is an issue with a bunch of docker containers stuck even after a `kubeadm reset` you can run
+If you are reinitializing and there is an issue with a bunch of docker containers stuck even after a `kubeadm reset` you can run
 ```
 # this is like break the glass and pull the lever!
 rm -Rf /var/lib/docker
+```
+
+Most of my work is done on CentOS 7 so I start with disabling firewalld:
+```
+systemctl stop firewalld && systemctl disable firewalld
+systemctl mask firewalld
 ```
 
 To initialize the cluster master I start with this command (some added for flannel):
