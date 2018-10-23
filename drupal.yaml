@@ -1,0 +1,147 @@
+image:
+  registry: docker.io
+  repository: bitnami/drupal
+  tag: 8.6.1-debian-9
+  pullPolicy: IfNotPresent
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ##
+  # pullSecrets:
+  #   - myRegistrKeySecretName
+
+## Installation Profile
+## ref: https://github.com/bitnami/bitnami-docker-drupal#configuration
+drupalProfile: standard
+drupalUsername: neal
+drupalPassword: newpassword
+drupalEmail: neal.blackburn@oregonstate.edu
+
+## Set to `yes` to allow the container to be started with blank passwords
+## ref: https://github.com/bitnami/bitnami-docker-wordpress#environment-variables
+allowEmptyPassword: "yes"
+
+externalDatabase:
+  ## Database host
+  # host:
+
+  ## Database user
+  # user: bn_drupal
+
+  ## Database password
+  # password:
+
+  ## Database name
+  # database: bitnami_drupal
+
+##
+## MariaDB chart configuration
+##
+mariadb:
+  enabled: true
+  replication:
+    enabled: false
+  db:
+    name: bitnami_drupal
+    user: bn_drupal
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  master:
+    persistence:
+      enabled: true
+      storageClass: "managed-nfs-storage"
+      accessMode: ReadWriteOnce
+      size: 8Gi
+
+## Kubernetes configuration
+## For minikube, set this to NodePort, elsewhere use LoadBalancer
+## Use ClusterIP if your setup includes ingress controller
+##
+serviceType: ClusterIP
+
+## Configure Ingress resource that allow you to access the Drupal installation
+## Set up the URL
+## ref: http://kubernetes.io/docs/user-guide/ingress/
+##
+ingress:
+  enabled: true
+  # Used to create Ingress record (should used with ServiceType: ClusterIP).
+  # hostname: drupal.local
+
+  ## Ingress annotations
+  ##
+  annotations:
+    kubernetes.io/ingress.class: traefik
+
+  ## Ingress TLS configuration
+  ## Secrets must be manually created in the namespace
+  ##
+  # tls:
+  #   - secretName: wordpress.local-tls
+  #     hosts:
+  #       - drupal.local
+
+## Enable persistence using Persistent Volume Claims
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  enabled: true
+  apache:
+    storageClass: "managed-nfs-storage"
+    accessMode: ReadWriteOnce
+    size: 1Gi
+  drupal:
+    storageClass: "managed-nfs-storage"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+
+    ## A manually managed Persistent Volume Claim
+    ## Requires persistence.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    ##
+    # existingClaim:
+
+    ## If defined, the drupal-data volume will mount to the specified hostPath.
+    ## Requires persistence.enabled: true
+    ## Requires persistence.existingClaim: nil|false
+    ## Default: nil.
+    ##
+    # hostPath:
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources:
+  requests:
+    memory: 512Mi
+    cpu: 300m
+
+## Configure volume mounts. This is useful for images whose data mount paths are
+## different than the default.
+## Setting volumeMounts.apache.mountPath to "" prevents Apache config mount.
+##
+volumeMounts:
+  drupal:
+    mountPath: /bitnami/drupal
+  apache:
+    mountPath: /bitnami/apache
+
+## Pass extra environment variables to the Drupal container.
+##
+# extraVars:
+# - name: EXTRA_VAR_1
+#   value: extra-var-value-1
+# - name: EXTRA_VAR_2
+#   value: extra-var-value-2
+
+livenessProbe:
+  httpGet:
+    path: /user/login
+    port: http
+  initialDelaySeconds: 120
+readinessProbe:
+  httpGet:
+    path: /user/login
+    port: http
+  initialDelaySeconds: 30

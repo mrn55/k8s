@@ -1,0 +1,56 @@
+serviceType: NodePort
+externalTrafficPolicy: Cluster
+replicas: 3
+cpuRequest: 10m
+memoryRequest: 20Mi
+cpuLimit: 100m
+memoryLimit: 30Mi
+debug:
+  enabled: false
+ssl:
+  enabled: true
+acme:
+  enabled: false
+  email: neal.blackburn@oregonstate.edu
+  staging: false
+  logging: true
+  challengeType: http-01
+  domains:
+    enabled: false
+    # List of sets of main and (optional) SANs to generate for
+    # for wildcard certificates see https://docs.traefik.io/configuration/acme/#wildcard-domains
+    domainsList:
+      - main: "*.training.drupal.oregonstate.edu"
+      - sans:
+        - "training.drupal.oregonstate.edu"
+  persistence:
+    enabled: true
+    storageClass: "managed-nfs-storage"
+    annotations: {}
+    accessMode: ReadWriteOnce
+    size: 1Gi
+dashboard:
+  enabled: true
+  domain: dash.training.drupal.oregonstate.edu
+  service:
+    annotations:
+      kubernetes.io/ingress.class: traefik
+  auth:
+    basic:
+      admin: $apr1$QGpv55Oa$sRT4fCDmakacuwUYhtGzS0
+gzip:
+  enabled: true
+accessLogs:
+  enabled: false
+  ## Path to the access logs file. If not provided, Traefik defaults it to stdout.
+  # filePath: ""
+  format: common  # choices are: common, json
+rbac:
+  enabled: true
+## Enable the /metrics endpoint, for now only supports prometheus
+## set to true to enable metric collection by prometheus
+
+deployment:
+  hostPort:
+    httpEnabled: true
+    httpsEnabled: true

@@ -31,12 +31,11 @@ setup-tiller:
 	kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 	kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
 deploy-some-drupals:
-	helm install --name blackbne1 stable/drupal --set ingress.annotations=traefik,ingress.enabled=true,ingress.hostname=blackbne.demo.nealblackburn.com
-	helm install --name blackbne2 stable/drupal
-	helm install --name blackbne3 stable/drupal
-	helm install --name blackbne4 stable/drupal
-deploy-some-drupals-yes:
-	helm install --name blackbne stable/drupal --set ingress.annotations="traefik",ingress.enabled=true,ingress.hostname=blackbne.demo.nealblackburn.com
+	helm install stable/drupal --name blackbne1 -f drupal.yaml --set ingress.hostname=blackbne1.training.drupal.oregonstate.edu
+	helm install stable/drupal --name blackbne2 -f drupal.yaml --set ingress.hostname=blackbne2.training.drupal.oregonstate.edu
+	helm install stable/drupal --name blackbne3 -f drupal.yaml --set ingress.hostname=blackbne3.training.drupal.oregonstate.edu
+	helm install stable/drupal --name blackbne4 -f drupal.yaml --set ingress.hostname=blackbne4.training.drupal.oregonstate.edu
+	helm install stable/drupal --name blackbne5 -f drupal.yaml --set ingress.hostname=blackbne5.training.drupal.oregonstate.edu
 traefik-deploy:
 	kubectl apply -f traefik-deployment.yaml
 traefik-proxy:
